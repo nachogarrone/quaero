@@ -20,35 +20,18 @@ import java_cup.runtime.Symbol;
 %%
 // Tokens.
 
-/*[0-9]+	{ return new Symbol(NUM, Double.parseDouble(yytext())); }*/
+true		{ return new Symbol(TRUE); }
+false		{ return new Symbol(FALSE); }
 
-[a-z][a-zA-Z0-9_]*
-	{ String $1 = yytext(); String $0;
-	  $0 = $1;
-	  return new Symbol(ID, yyline, yycolumn, $0); }
+[a-zA-Z_][a-zA-Z0-9_]* { String $1 = yytext(); return new Symbol(TAG, yyline, yycolumn, $1); }
 
-"="	{ return new Symbol(EQUALS_SIGN, yyline, yycolumn, yytext()); }
-
-";" { return new Symbol(SEMICOLON, yyline, yycolumn, yytext()); }
-[a-zA-Z_][a-zA-Z0-9_]*
-	{ String $1 = yytext(); String $0;
-	  $0 = $1;
-	  return new Symbol(ID, yyline, yycolumn, $0); }
-[a-z][a-zA-Z0-9_]*
-	{ String $1 = yytext(); String $0;
-	  $0 = $1;
-	  return new Symbol(PRED, yyline, yycolumn, $0); }
+[a-zA-Z0-9_]* { String $1 = yytext(); return new Symbol(STR, yyline, yycolumn, $1); }
+[0-9]* { String $1 = yytext(); return new Symbol(NUM, yyline, yycolumn, $1); }
 
 ,		{ return new Symbol(COMMA); }
-\~		{ return new Symbol(NEG); }
-\/\\	{ return new Symbol(AND); }
-\\\/	{ return new Symbol(OR); }
--\>		{ return new Symbol(COND); }
-\<-\>	{ return new Symbol(BICOND); }
+:		{ return new Symbol(SEMICOLON); }
 \(		{ return new Symbol(LPAREN); }
 \)		{ return new Symbol(RPAREN); }
-T		{ return new Symbol(TRUE); }
-F		{ return new Symbol(FALSE); }
 
 
 .	{ /* Fallback */

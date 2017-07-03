@@ -27,66 +27,36 @@ parser code {:
 
 // Rules
 
-
-terminal String PRED;
-terminal NEG;
-terminal AND;
-terminal OR;
-terminal COND;
-terminal BICOND;
 terminal LPAREN;
 terminal RPAREN;
-terminal String ID;
-terminal EQUALS_SIGN;
 terminal SEMICOLON;
 terminal COMMA;
 
-terminal Boolean TRUE, FALSE;
 
 non terminal Stmt stmt;
-non terminal Exp expr;
-non terminal List<Exp> exprs;
 
-precedence left BICOND;
-precedence left COND;
-precedence left OR;
-precedence left AND;
-precedence left NEG;
-
-start with stmt;
-
-stmt      ::=ID:id EQUALS_SIGN:eq expr:e SEMICOLON:s
-          {: RESULT = new Assignment(id, e); :}
+stmt      ::=TAG:tag Lista:l
+          {: RESULT = l; :}
 ;
 
-expr      ::=NEG expr:e1
-	      {: RESULT = new Negation(e1); :}
-          |
-            PRED:p LPAREN exprs:e RPAREN
-	      {: RESULT = new MyPredicate(p,e); :}
-          |
-              expr:e1 AND expr:e2
-          {: RESULT = new Conjunction(e1,e2); :}
-	      |
-              expr:e1 OR expr:e2
-	      {: RESULT = new Disjunction(e1,e2); :}
-	      |
-              expr:e1 COND expr:e2
-	      {: RESULT = new Conditional(e1, e2); :}
-	      |
-              expr:e1 BICOND expr:e2
-	      {: RESULT = new CompareEqual(e1, e2) ; :}
-	      |
-              TRUE:n
-	      {: RESULT = new TruthValue(true); :}
-	      |
-	      	  FALSE:n
-	      {: RESULT = new TruthValue(false); :}
-	      |
-              LPAREN expr:e RPAREN
-	      {: RESULT = e; :}
+list      ::=LPAREN elems:es RPAREN
+           {: RESULT = es; :}
 ;
 
-exprs   ::=expr:e {: RESULT = new ArrayList(); RESULT.add(e); :}
-    | exprs:es COMMA expr:e {: RESULT = es; RESULT.add(e); :}
+elems      ::= attr:a
+           {: RESULT = a; :}
+           | elems:e COMMA attr:a
+           {: RESULT = e; e.add(a); :}
+;
+
+attr      ::= TAG:t SEMICOLON STR:s
+           {: RESULT = String.valueOf(s); :}
+           | TAG:t SEMICOLON NUM:n
+           {: RESULT = Double.parseDouble(n); :}
+           | TAG:t SEMICOLON true
+           {: RESULT = true; :}
+           | TAG:t SEMICOLON false
+           {: RESULT = false; :}
+           | stmt:s
+           {: RESULT = s; :}
 ;
