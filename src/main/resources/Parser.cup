@@ -1,0 +1,92 @@
+package com.ucu.teoria.dos.quaero.parser;
+
+import java.io.*;
+import java.util.*;
+import java_cup.runtime.Symbol;
+import com.ucu.teoria.dos.quaero.ast.*;
+
+parser code {:
+
+
+	public static Symbol parse(Reader input) throws Exception {
+		return (new Parser(new Lexer(input))).parse();
+	}
+
+	public static Symbol parse(String input) throws Exception {
+		return parse(new StringReader(input));
+	}
+
+	public static void main(String[] args) throws Exception {
+		if (args.length < 1) {
+			System.out.println(parse(new InputStreamReader(System.in, "UTF8")).value);
+		} else for (int i = 0; i < args.length; ++i) {
+			System.out.println(parse(new InputStreamReader(new FileInputStream(args[i]), "UTF8")).value);
+		}
+	}
+:}
+
+// Rules
+
+
+terminal String PRED;
+terminal NEG;
+terminal AND;
+terminal OR;
+terminal COND;
+terminal BICOND;
+terminal LPAREN;
+terminal RPAREN;
+terminal String ID;
+terminal EQUALS_SIGN;
+terminal SEMICOLON;
+terminal COMMA;
+
+terminal Boolean TRUE, FALSE;
+
+non terminal Stmt stmt;
+non terminal Exp expr;
+non terminal List<Exp> exprs;
+
+precedence left BICOND;
+precedence left COND;
+precedence left OR;
+precedence left AND;
+precedence left NEG;
+
+start with stmt;
+
+stmt      ::=ID:id EQUALS_SIGN:eq expr:e SEMICOLON:s
+          {: RESULT = new Assignment(id, e); :}
+;
+
+expr      ::=NEG expr:e1
+	      {: RESULT = new Negation(e1); :}
+          |
+            PRED:p LPAREN exprs:e RPAREN
+	      {: RESULT = new MyPredicate(p,e); :}
+          |
+              expr:e1 AND expr:e2
+          {: RESULT = new Conjunction(e1,e2); :}
+	      |
+              expr:e1 OR expr:e2
+	      {: RESULT = new Disjunction(e1,e2); :}
+	      |
+              expr:e1 COND expr:e2
+	      {: RESULT = new Conditional(e1, e2); :}
+	      |
+              expr:e1 BICOND expr:e2
+	      {: RESULT = new CompareEqual(e1, e2) ; :}
+	      |
+              TRUE:n
+	      {: RESULT = new TruthValue(true); :}
+	      |
+	      	  FALSE:n
+	      {: RESULT = new TruthValue(false); :}
+	      |
+              LPAREN expr:e RPAREN
+	      {: RESULT = e; :}
+;
+
+exprs   ::=expr:e {: RESULT = new ArrayList(); RESULT.add(e); :}
+    | exprs:es COMMA expr:e {: RESULT = es; RESULT.add(e); :}
+;
