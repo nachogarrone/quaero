@@ -33,6 +33,15 @@ false		{ return new Symbol(FALSE); }
 \(		{ return new Symbol(LPAREN); }
 \)		{ return new Symbol(RPAREN); }
 
+"$" 	{ return new Symbol(ROOT); }
+"/" 	{ return new Symbol(ELEMENTS); }
+"~" 	{ return new Symbol(RE); }
+"." 	{ return new Symbol(POINT); }
+"&" 	{ return new Symbol(INTERSEC); }
+"|" 	{ return new Symbol(UNION); }
+"+" 	{ return new Symbol(CONCAT); }
+"-" 	{ return new Symbol(DIFERENCIA); }
+
 
 .	{ /* Fallback */
 		return new Symbol(error, "Unexpected input <"+ yytext() +">!");
