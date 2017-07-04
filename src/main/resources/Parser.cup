@@ -48,7 +48,7 @@ node      ::= TAG:tag LPAREN elems:es RPAREN
 ;
 
 elems     ::= TAG:t COLON value:v
-           {: RESULT = new NodeQ(); :}
+           {: RESULT = new NodeQ(); RESULT.attributes.put(t.toString(),v); :}
            | elems:e COMMA TAG:t COLON value:v
            {: RESULT = e; e.attributes.put(t.toString(),v); :}
            | elems:e COMMA value:v
