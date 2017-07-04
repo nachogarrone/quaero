@@ -29,7 +29,7 @@ false		{ return new Symbol(FALSE); }
 [0-9]* { String $1 = yytext(); return new Symbol(NUM, yyline, yycolumn, $1); }
 
 ,		{ return new Symbol(COMMA); }
-:		{ return new Symbol(SEMICOLON); }
+:		{ return new Symbol(COLON); }
 \(		{ return new Symbol(LPAREN); }
 \)		{ return new Symbol(RPAREN); }
 

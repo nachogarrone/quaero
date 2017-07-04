@@ -29,34 +29,40 @@ parser code {:
 
 terminal LPAREN;
 terminal RPAREN;
-terminal SEMICOLON;
+terminal COLON;
 terminal COMMA;
+terminal NUM;
+terminal TAG;
+terminal STR;
+terminal TRUE;
+terminal FALSE;
 
+non terminal NodeQ node;
+non terminal Object value;
+non terminal NodeQ elems;
 
-non terminal Stmt stmt;
+start with value;
 
-stmt      ::=TAG:tag Lista:l
-          {: RESULT = l; :}
+node      ::= TAG:tag LPAREN elems:es RPAREN
+           {: RESULT = es; es.tag=tag.toString(); :}
 ;
 
-list      ::=LPAREN elems:es RPAREN
-           {: RESULT = es; :}
+elems     ::= TAG:t COLON value:v
+           {: RESULT = new NodeQ(); :}
+           | elems:e COMMA TAG:t COLON value:v
+           {: RESULT = e; e.attributes.put(t.toString(),v); :}
+           | elems:e COMMA value:v
+           {: RESULT = e; e.elements.add(v); :}
 ;
 
-elems      ::= attr:a
-           {: RESULT = a; :}
-           | elems:e COMMA attr:a
-           {: RESULT = e; e.add(a); :}
-;
-
-attr      ::= TAG:t SEMICOLON STR:s
-           {: RESULT = String.valueOf(s); :}
-           | TAG:t SEMICOLON NUM:n
-           {: RESULT = Double.parseDouble(n); :}
-           | TAG:t SEMICOLON true
-           {: RESULT = true; :}
-           | TAG:t SEMICOLON false
-           {: RESULT = false; :}
-           | stmt:s
-           {: RESULT = s; :}
+value     ::= STR:s
+          {: RESULT = s.toString(); :}
+          | NUM:n
+          {: RESULT = Double.parseDouble(n.toString()); :}
+          | TRUE
+          {: RESULT = true; :}
+          | FALSE
+          {: RESULT = false; :}
+          | node:n
+          {: RESULT = n; :}
 ;

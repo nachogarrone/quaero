@@ -1,5 +1,8 @@
 package com.ucu.teoria.dos.quaero;
 
+import com.ucu.teoria.dos.quaero.ast.NodeQ;
+import com.ucu.teoria.dos.quaero.parser.Parser;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -8,10 +11,8 @@ import java.io.InputStreamReader;
  */
 public class Main {
     public static void showParse(String input) throws Exception {
-//        Exp exp = (Exp) (Parser.parse(input).value);
-
-
-//        System.out.println(exp);
+        NodeQ nodeQ = (NodeQ) (Parser.parse(input).value);
+        System.out.println(nodeQ);
     }
 
     public static void main(String[] args) throws Exception {
