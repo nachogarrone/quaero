@@ -55,7 +55,7 @@ elems     ::= TAG:t COLON value:v
            {: RESULT = e; e.elements.add(v); :}
 ;
 
-value     ::= STR:s
+value     ::= STR:s | TAG:s
           {: RESULT = s.toString(); :}
           | NUM:n
           {: RESULT = Double.parseDouble(n.toString()); :}

@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 public class Main {
     public static void showParse(String input) throws Exception {
         NodeQ nodeQ = (NodeQ) (Parser.parse(input).value);
+//        NodeQ nodeQ = (NodeQ) (Parser.parse(nodeQ).value);
+
         System.out.println(nodeQ);
     }
 
