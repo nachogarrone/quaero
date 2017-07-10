@@ -35,6 +35,7 @@ terminal TAG;
 terminal STR;
 terminal TRUE;
 terminal FALSE;
+terminal COMILLA;
 
 //Operadores
 terminal ROOT;
@@ -79,7 +80,7 @@ elems     ::= TAG:t COLON value:v
 
 
 consulta 	::= consulta:c1 DIFERENCIA consulta:c2
-           {: RESULT = new QDiference(c1,c2); :}
+           {: RESULT = new QDifference(c1,c2); :}
            |
            consulta:c1 CONCAT consulta:c2
            {: RESULT = new QConcat(c1,c2); :}
@@ -91,16 +92,25 @@ consulta 	::= consulta:c1 DIFERENCIA consulta:c2
            {: RESULT = new QIntersec(c1,c2); :}
            |
            consulta:c1 POINT
-           {: RESULT = new QPoint(c1,c2); :}
+           {: RESULT = new QPoint(c1); :}
            |
            consulta:c1 RE STR:s
            {: RESULT = new QFilter(c1, s); :}
+           |
+           consulta:c1 COMILLA TAG:t1 COMILLA
+           {: RESULT = new QTag(c1,t1); :}
+           |
+           consulta:c1 TAG:t1
+           {: RESULT = new QTag(c1,t1); :}
            |
            consulta:c1 ELEMENTS
            {: RESULT = new QElements(c1); :}
            |
            ROOT consulta:c1
            {: RESULT = new QRoot(c1); :}
+           |
+           LPAREN consulta:c1 RPAREN
+           {: RESULT = c1; :}
 ;
 
 value     ::= STR:s

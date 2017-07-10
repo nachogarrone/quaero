@@ -40,6 +40,8 @@ false		{ return new Symbol(FALSE); }
 "|" 	{ return new Symbol(UNION); }
 "+" 	{ return new Symbol(CONCAT); }
 "-" 	{ return new Symbol(DIFERENCIA); }
+"'"		{ return new Symbol(COMILLA); }
+
 
 
 .	{ /* Fallback */
