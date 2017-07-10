@@ -26,7 +26,6 @@ parser code {:
 :}
 
 // Rules
-
 terminal LPAREN;
 terminal RPAREN;
 terminal COLON;
@@ -37,9 +36,32 @@ terminal STR;
 terminal TRUE;
 terminal FALSE;
 
+//Operadores
+terminal ROOT;
+terminal ELEMENTS;
+terminal RE;
+terminal POINT;
+terminal INTERSEC;
+terminal UNION;
+terminal CONCAT;
+terminal DIFERENCIA;
+
 non terminal NodeQ node;
 non terminal Object value;
 non terminal NodeQ elems;
+
+non terminal consulta;
+
+
+precedence left ROOT;
+precedence left ELEMENTS;
+precedence left RE;
+precedence left POINT;
+precedence left INTERSEC;
+precedence left UNION;
+precedence left CONCAT;
+precedence left DIFERENCIA;
+
 
 start with value;
 
@@ -53,6 +75,31 @@ elems     ::= TAG:t COLON value:v
            {: RESULT = e; e.attributes.put(t.toString(),v); :}
            | elems:e COMMA value:v
            {: RESULT = e; e.elements.add(v); :}
+;
+
+consulta 	::= consulta:c1 DIFERENCIA consulta:c2
+           {: RESULT = new QDiference(c1,c2); :}
+           |
+           consulta:c1 CONCAT consulta:c2
+           {: RESULT = new QConcat(c1,c2); :}
+           |
+           consulta:c1 UNION consulta:c2
+           {: RESULT = new QUnion(c1,c2); :}
+		   |
+		   consulta:c1 INTERSEC consulta:c2
+           {: RESULT = new QIntersec(c1,c2); :}
+           |
+           consulta:c1 POINT
+           {: RESULT = new QPoint(c1,c2); :}
+           |
+           consulta:c1 RE STR:s
+           {: RESULT = new QFilter(c1, s); :}
+           |
+           consulta:c1 ELEMENTS
+           {: RESULT = new QElements(c1); :}
+           |
+           ROOT consulta:c1
+           {: RESULT = new QRoot(c1); :}
 ;
 
 value     ::= STR:s
