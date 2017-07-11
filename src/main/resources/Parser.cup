@@ -13,6 +13,7 @@ parser code {:
 	}
 
 	public static Symbol parse(String input) throws Exception {
+	    System.out.println(input);
 		return parse(new StringReader(input));
 	}
 
@@ -38,21 +39,21 @@ terminal FALSE;
 terminal COMILLA;
 
 //Operadores
-terminal ROOT;
-terminal ELEMENTS;
-terminal RE;
-terminal POINT;
-terminal INTERSEC;
-terminal UNION;
-terminal CONCAT;
-terminal DIFERENCIA;
+terminal Exp ROOT;
+terminal Exp ELEMENTS;
+terminal Exp RE;
+terminal Exp POINT;
+terminal Exp INTERSEC;
+terminal Exp UNION;
+terminal Exp CONCAT;
+terminal Exp DIFERENCIA;
 
 non terminal NodeQ node;
+non terminal Object root;
 non terminal Object value;
 non terminal NodeQ elems;
 
 non terminal Exp consulta;
-
 
 precedence left ROOT;
 precedence left ELEMENTS;
@@ -63,17 +64,25 @@ precedence left UNION;
 precedence left CONCAT;
 precedence left DIFERENCIA;
 
-start with value;
+start with root;
+
+root      ::= node:n
+           {: RESULT = n; :}
+           | value:v
+           {: RESULT = v; :}
+;
 
 node      ::= TAG:tag LPAREN elems:es RPAREN
            {: RESULT = es; es.tag=tag.toString(); :}
 ;
 
-elems     ::= TAG:t COLON value:v
+elems     ::= root:v
+           {: RESULT = new NodeQ(); RESULT.elements.add(v); :}
+           | TAG:t COLON root:v
            {: RESULT = new NodeQ(); RESULT.attributes.put(t.toString(),v); :}
-           | elems:e COMMA TAG:t COLON value:v
+           | elems:e COMMA TAG:t COLON root:v
            {: RESULT = e; e.attributes.put(t.toString(),v); :}
-           | elems:e COMMA value:v
+           | elems:e COMMA root:v
            {: RESULT = e; e.elements.add(v); :}
 ;
 
@@ -105,14 +114,17 @@ consulta 	::= consulta:c1 DIFERENCIA consulta:c2
            consulta:c1 ELEMENTS
            {: RESULT = new QElements(c1); :}
            |
-           ROOT consulta:c1
+           ROOT
            {: RESULT = new QRoot(); :}
            |
            LPAREN consulta:c1 RPAREN
            {: RESULT = c1; :}
 ;
 
-value     ::= STR:s
+value     ::=
+          consulta:c
+          {: RESULT = c; :}
+          | STR:s
           {: RESULT = s.toString(); :}
           | NUM:n
           {: RESULT = Double.parseDouble(n.toString()); :}
@@ -120,6 +132,4 @@ value     ::= STR:s
           {: RESULT = true; :}
           | FALSE
           {: RESULT = false; :}
-          | node:n
-          {: RESULT = n; :}
 ;

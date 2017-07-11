@@ -14,18 +14,16 @@ public class QPoint extends Exp {
     }
 
     @Override
-    public List<Object> evaluate() {        
+    public List<Object> evaluate() {
         List<Object> result = new ArrayList<>();
         List<Object> evaluate = operator.evaluate();
         evaluate.forEach(item -> {
             if (item instanceof NodeQ) {
-            	result.add(item);
+                result.add(item);
             }
         });
         return result;
     }
-    
-    
-    
-    
+
+
 }

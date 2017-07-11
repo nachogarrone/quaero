@@ -7,11 +7,12 @@ import java.util.List;
  * Created by nachogarrone on 7/4/17.
  */
 public class QRoot extends Exp {
+
     // Contiene la raiz del nodo $
     @Override
     public List<Object> evaluate() {
         List<Object> res = new ArrayList<>();
-        res.add(0, NodeQ.getInstance());
+        res.add(0, NodeQ.ROOT);
         return res;
     }
 }

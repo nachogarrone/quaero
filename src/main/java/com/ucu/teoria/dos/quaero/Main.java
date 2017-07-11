@@ -1,7 +1,7 @@
 package com.ucu.teoria.dos.quaero;
 
+import com.ucu.teoria.dos.quaero.ast.Exp;
 import com.ucu.teoria.dos.quaero.ast.NodeQ;
-import com.ucu.teoria.dos.quaero.ast.QRoot;
 import com.ucu.teoria.dos.quaero.parser.Parser;
 
 import java.util.Scanner;
@@ -16,18 +16,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
-//        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-//        StringBuilder source = new StringBuilder();
-//        for (String line = stdIn.readLine(); line != null; line = stdIn.readLine()) {
-//            if (line.length() > 0) {
-//                source.append(line).append("\n");
-//            } else { // Empty line means input ends.
-////                showTokens(source.toString());
-//                showParse(source.toString());
-//            }
-//        }
-
-
         Scanner scanner = new Scanner(System.in);
         String model = scanner.nextLine();
         System.out.println("model: " + model);
@@ -38,9 +26,8 @@ public class Main {
             String consulta = scanner.nextLine();
             // process the line
             System.out.println("consulta: " + consulta);
-            Object o = (Parser.parse(consulta).value);
-//            nodeConsulta;
-            System.out.println("consulta: " + o);
+            Exp exp = (Exp) Parser.parse(consulta).value;
+            System.out.println("parsed: " + exp.evaluate());
         }
         scanner.close();
     }
