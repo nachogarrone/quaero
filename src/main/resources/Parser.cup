@@ -31,8 +31,8 @@ terminal RPAREN;
 terminal COLON;
 terminal COMMA;
 terminal NUM;
-terminal TAG;
-terminal STR;
+terminal String TAG;
+terminal String STR;
 terminal TRUE;
 terminal FALSE;
 terminal COMILLA;
@@ -51,7 +51,7 @@ non terminal NodeQ node;
 non terminal Object value;
 non terminal NodeQ elems;
 
-non terminal consulta;
+non terminal Exp consulta;
 
 
 precedence left ROOT;
@@ -62,7 +62,6 @@ precedence left INTERSEC;
 precedence left UNION;
 precedence left CONCAT;
 precedence left DIFERENCIA;
-
 
 start with value;
 
@@ -107,7 +106,7 @@ consulta 	::= consulta:c1 DIFERENCIA consulta:c2
            {: RESULT = new QElements(c1); :}
            |
            ROOT consulta:c1
-           {: RESULT = new QRoot(c1); :}
+           {: RESULT = new QRoot(); :}
            |
            LPAREN consulta:c1 RPAREN
            {: RESULT = c1; :}

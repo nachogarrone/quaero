@@ -16,7 +16,7 @@ public class QUnion extends Exp {
     }
 
     @Override
-    public List<Object> evaluate() {        
+    public List<Object> evaluate() {
         List<Object> result = new ArrayList<>();
         List<Object> evaluate = operator1.evaluate();
         List<Object> evaluate2 = operator2.evaluate();
@@ -27,13 +27,13 @@ public class QUnion extends Exp {
         });
         evaluate2.forEach(item -> {
             if (item instanceof NodeQ) {
-            	((NodeQ) item).elements.forEach(nodo -> {
-            		if (!result.contains(nodo)) result.add(nodo);
-            	}
+                ((NodeQ) item).elements.forEach(nodo -> {
+                    if (!result.contains(nodo)) result.add(nodo);
+                });
             }
-        });      
+        });
         return result;
     }
-    
-    
+
+
 }

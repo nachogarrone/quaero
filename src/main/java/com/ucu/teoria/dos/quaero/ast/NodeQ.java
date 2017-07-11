@@ -9,21 +9,15 @@ import java.util.Map;
  * Created by nachogarrone on 7/3/17.
  */
 public class NodeQ {
-    private static NodeQ instance;
-
     public static String tag;
     public static List<Object> elements = new ArrayList<>();
     public static Map<String, Object> attributes = new HashMap<>();
-
-    public NodeQ() {
-        instance = new NodeQ();
-    }
+    private static NodeQ instance;
 
     public static NodeQ getInstance() {
         if (instance == null) instance = new NodeQ();
         return instance;
     }
-
 
     @Override
     public String toString() {

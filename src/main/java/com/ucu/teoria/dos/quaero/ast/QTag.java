@@ -9,20 +9,20 @@ import java.util.List;
 public class QTag extends Exp {
     private Exp operator;
     private String tag;
-    
+
     public QTag(Exp operator, String tag) {
         this.operator = operator;
         this.tag = tag;
     }
-    
+
 
     @Override
     public List<Object> evaluate() {
-    	List<Object> result = new ArrayList<>();
+        List<Object> result = new ArrayList<>();
         List<Object> evaluate = operator.evaluate();
         evaluate.forEach(item -> {
             if (item instanceof NodeQ) {
-            	if (item.tag.equals(tag)) result.add(item);
+                if (((NodeQ) item).tag.equals(tag)) result.add(item);
             }
         });
         return result;
