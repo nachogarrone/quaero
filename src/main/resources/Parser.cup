@@ -13,7 +13,6 @@ parser code {:
 	}
 
 	public static Symbol parse(String input) throws Exception {
-	    System.out.println(input);
 		return parse(new StringReader(input));
 	}
 
@@ -66,70 +65,34 @@ precedence left DIFERENCIA;
 
 start with root;
 
-root      ::= node:n
-           {: RESULT = n; :}
-           | value:v
-           {: RESULT = v; :}
+root      ::= node:n {: RESULT = n; :}
+           | consulta:c {: RESULT = c; :}
 ;
 
-node      ::= TAG:tag LPAREN elems:es RPAREN
-           {: RESULT = es; es.tag=tag.toString(); :}
+node      ::= TAG:tag LPAREN elems:es RPAREN {: RESULT = es; es.tag=tag; :}
 ;
 
-elems     ::= root:v
-           {: RESULT = new NodeQ(); RESULT.elements.add(v); :}
-           | TAG:t COLON root:v
-           {: RESULT = new NodeQ(); RESULT.attributes.put(t.toString(),v); :}
-           | elems:e COMMA TAG:t COLON root:v
-           {: RESULT = e; e.attributes.put(t.toString(),v); :}
-           | elems:e COMMA root:v
-           {: RESULT = e; e.elements.add(v); :}
+elems     ::= node:v {: RESULT = new NodeQ(); RESULT.elements.add(v); :}
+           | TAG:t COLON value:v {: RESULT = new NodeQ(); RESULT.attributes.put(t,v); :}
+           | elems:e COMMA TAG:t COLON node:v {: RESULT = e; e.attributes.put(t,v); :}
+           | elems:e COMMA node:v {: RESULT = e; e.elements.add(v); :}
 ;
 
-
-consulta 	::= consulta:c1 DIFERENCIA consulta:c2
-           {: RESULT = new QDifference(c1,c2); :}
-           |
-           consulta:c1 CONCAT consulta:c2
-           {: RESULT = new QConcat(c1,c2); :}
-           |
-           consulta:c1 UNION consulta:c2
-           {: RESULT = new QUnion(c1,c2); :}
-		   |
-		   consulta:c1 INTERSEC consulta:c2
-           {: RESULT = new QIntersec(c1,c2); :}
-           |
-           consulta:c1 POINT
-           {: RESULT = new QPoint(c1); :}
-           |
-           consulta:c1 RE STR:s
-           {: RESULT = new QFilter(c1, s); :}
-           |
-           consulta:c1 COMILLA TAG:t1 COMILLA
-           {: RESULT = new QTag(c1,t1); :}
-           |
-           consulta:c1 TAG:t1
-           {: RESULT = new QTag(c1,t1); :}
-           |
-           consulta:c1 ELEMENTS
-           {: RESULT = new QElements(c1); :}
-           |
-           ROOT
-           {: RESULT = new QRoot(); :}
-           |
-           LPAREN consulta:c1 RPAREN
-           {: RESULT = c1; :}
+consulta 	::= consulta:c1 DIFERENCIA consulta:c2 {: RESULT = new QDifference(c1,c2); :}
+           | consulta:c1 CONCAT consulta:c2 {: RESULT = new QConcat(c1,c2); :}
+           | consulta:c1 UNION consulta:c2 {: RESULT = new QUnion(c1,c2); :}
+		   | consulta:c1 INTERSEC consulta:c2 {: RESULT = new QIntersec(c1,c2); :}
+           | consulta:c1 POINT {: RESULT = new QPoint(c1); :}
+           | consulta:c1 RE STR:s {: RESULT = new QFilter(c1, s); :}
+           | consulta:c1 COMILLA TAG:t1 COMILLA {: RESULT = new QTag(c1,t1); :}
+           | consulta:c1 TAG:t1 {: RESULT = new QTag(c1,t1); :}
+           | consulta:c1 ELEMENTS {: RESULT = new QElements(c1); :}
+           | ROOT {: RESULT = new QRoot(); :}
+           | LPAREN consulta:c1 RPAREN {: RESULT = c1; :}
 ;
 
-value     ::=
-          consulta:c
-          {: RESULT = c; :}
-          | STR:s
-          {: RESULT = s.toString(); :}
-          | NUM:n
-          {: RESULT = Double.parseDouble(n.toString()); :}
-          | TRUE
-          {: RESULT = true; :}
-          | FALSE
-          {: RESULT = false; :}
+value     ::= STR:s {: RESULT = s; :}
+          | NUM:n {: RESULT = Double.parseDouble(n.toString()); :}
+          | TRUE {: RESULT = true; :}
+          | FALSE {: RESULT = false; :}
 ;
