@@ -25,7 +25,7 @@ false		{ return new Symbol(FALSE); }
 
 [a-zA-Z_][a-zA-Z0-9_]*  { return new Symbol(TAG, yyline, yycolumn, yytext()); }
 [0-9]*                  { return new Symbol(NUM, yyline, yycolumn, yytext()); }
-[a-zA-Z0-9_]*           { return new Symbol(STR, yyline, yycolumn, yytext()); }
+\"[^\"]*\"           { return new Symbol(STR, yyline, yycolumn, yytext()); }
 
 ,		{ return new Symbol(COMMA); }
 :		{ return new Symbol(COLON); }

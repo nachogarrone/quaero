@@ -4,9 +4,9 @@ import java.io.*;
 import java.util.*;
 import java_cup.runtime.Symbol;
 import com.ucu.teoria.dos.quaero.ast.*;
-
+ 
 parser code {:
-
+ 
 
 	public static Symbol parse(Reader input) throws Exception {
 		return (new Parser(new Lexer(input))).parse();
@@ -72,12 +72,12 @@ root      ::= node:n {: RESULT = n; :}
 node      ::= TAG:tag LPAREN elems:es RPAREN {: RESULT = es; es.tag=tag; :}
 ;
 
-elems     ::= node:v {: RESULT = new NodeQ(); RESULT.elements.add(v); :}
+elems     ::= value:v {: RESULT = new NodeQ(); RESULT.elements.add(v); :}
            | TAG:t COLON value:v {: RESULT = new NodeQ(); RESULT.attributes.put(t,v); :}
-           | elems:e COMMA TAG:t COLON node:v {: RESULT = e; e.attributes.put(t,v); :}
-           | elems:e COMMA node:v {: RESULT = e; e.elements.add(v); :}
+           | elems:e COMMA TAG:t COLON value:v {: RESULT = e; e.attributes.put(t,v); :}
+           | elems:e COMMA value:v {: RESULT = e; e.elements.add(v); :}
 ;
-
+ 
 consulta 	::= consulta:c1 DIFERENCIA consulta:c2 {: RESULT = new QDifference(c1,c2); :}
            | consulta:c1 CONCAT consulta:c2 {: RESULT = new QConcat(c1,c2); :}
            | consulta:c1 UNION consulta:c2 {: RESULT = new QUnion(c1,c2); :}
@@ -87,11 +87,11 @@ consulta 	::= consulta:c1 DIFERENCIA consulta:c2 {: RESULT = new QDifference(c1,
            | consulta:c1 COMILLA TAG:t1 COMILLA {: RESULT = new QTag(c1,t1); :}
            | consulta:c1 TAG:t1 {: RESULT = new QTag(c1,t1); :}
            | consulta:c1 ELEMENTS {: RESULT = new QElements(c1); :}
-           | ROOT {: RESULT = new QRoot(); :}
+           | ROOT:r{: RESULT = new QRoot(); :} 
            | LPAREN consulta:c1 RPAREN {: RESULT = c1; :}
 ;
 
-value     ::= STR:s {: RESULT = s; :}
+value     ::= node:n {: RESULT=n; :} | STR:s {: RESULT = s; :}
           | NUM:n {: RESULT = Double.parseDouble(n.toString()); :}
           | TRUE {: RESULT = true; :}
           | FALSE {: RESULT = false; :}

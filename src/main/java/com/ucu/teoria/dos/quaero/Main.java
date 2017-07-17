@@ -17,14 +17,15 @@ public class Main {
         String model = scanner.nextLine();
         System.out.println("model: " + model);
         NodeQ nodeQ = (NodeQ) (Parser.parse(model).value);
+        NodeQ.ROOT = nodeQ;
         System.out.println("parsed: " + nodeQ);
 
         while (scanner.hasNextLine()) {
             String consulta = scanner.nextLine();
             // process the line
             System.out.println("consulta: " + consulta);
-            QRoot root = new QRoot();
-            System.out.println("root parsed: " + root.evaluate());
+            //QRoot root = new QRoot();
+            //System.out.println("root parsed: " + root.evaluate());
             Exp exp = (Exp) Parser.parse(consulta).value;
             System.out.println("parsed: " + exp.evaluate());
         }

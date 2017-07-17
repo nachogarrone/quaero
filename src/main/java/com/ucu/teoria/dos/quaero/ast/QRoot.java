@@ -11,6 +11,7 @@ public class QRoot extends Exp {
     // Contiene la raiz del nodo $
     @Override
     public List<Object> evaluate() {
+    	System.out.println("en qroot");
         List<Object> res = new ArrayList<>();
         res.add(0, NodeQ.ROOT);
         return res;
